@@ -1,0 +1,34 @@
+%%%Oscar Dabrowski%%%
+function rho=nonBlindDetector(wmImg,hostImg,w)
+%nonBlindDetector: wmImg,hostImg: filenames (strings), w : N1xN2 wm
+
+x=imread(hostImg);
+y=imread(wmImg);
+
+%vectorize wm (assumed to be a matrix of same size as the images
+wVect=double(w(:));%column vector
+N=length(wVect);
+
+%test that images are both in grayscale
+%otherwise convert them.
+[sx1,sx2,sx3]=size(x);
+[sy1,sy2,sy3]=size(y);
+if sx3>1
+    x=rgb2gray(x);
+end
+if sy3>1
+    y=rgb2gray(y);
+end
+
+%Extract the watermark
+wHat=x-y;%estimated wm (non blind)
+wHatVect=double(wHat(:));%vectorized in a column vector
+imshow(wHat,[])
+title('Extracted watermark');
+
+%Linear correlation of wHat (estimated wm) with w (original wm)
+%rho=sum(wVect.*wHatVect)/N
+rho=(1/N)*(wVect'*wHatVect)
+
+
+end
